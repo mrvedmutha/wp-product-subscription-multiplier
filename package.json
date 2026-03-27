@@ -1,0 +1,21 @@
+{
+  "name": "eternal-subscription",
+  "version": "1.0.0",
+  "description": "Eternal Labs WooCommerce supply plan plugin",
+  "private": true,
+  "scripts": {
+    "lint:php": "vendor/bin/phpcs --standard=phpcs.xml inc/ eternal-subscription.php",
+    "lint:phpstan": "vendor/bin/phpstan analyse --configuration=phpstan.neon --no-progress",
+    "ai:check": "npm run lint:php && npm run lint:phpstan",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "**/*.php": [
+      "vendor/bin/phpcs --standard=phpcs.xml"
+    ]
+  },
+  "devDependencies": {
+    "husky": "^9.0.0",
+    "lint-staged": "^15.0.0"
+  }
+}

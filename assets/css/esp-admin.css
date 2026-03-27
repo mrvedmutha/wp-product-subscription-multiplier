@@ -1,0 +1,105 @@
+/* Supply Plan Wrapper */
+.esp-supply-plan-wrapper {
+    border-top: 1px solid #e0e0e0;
+    margin-top: 16px;
+    padding-top: 12px;
+}
+
+/* Tiers container — hidden until toggle checked */
+.esp-tiers-container {
+    display: none;
+    margin-top: 16px;
+}
+
+.esp-tiers-container.esp-active {
+    display: block;
+}
+
+/* Individual tier */
+.esp-tier {
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    overflow: hidden;
+}
+
+/* Tier header */
+.esp-tier-header {
+    align-items: center;
+    background: #f6f7f7;
+    border-bottom: 1px solid #dcdcde;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 14px;
+}
+
+.esp-tier-header span {
+    font-weight: 600;
+}
+
+.esp-tier-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 0;
+    transition: transform 0.2s ease;
+}
+
+.esp-tier-body {
+    display: none;
+    padding: 12px 14px;
+}
+
+.esp-tier-body.open {
+    display: block;
+}
+
+/* Computed final price */
+.esp-final-price {
+    color: #2271b1;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Read-only label */
+.esp-readonly-label {
+    color: #646970;
+    font-size: 12px;
+}
+
+/* Discount type radio group */
+.esp-discount-type-group {
+    align-items: center;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+.esp-discount-type-group label {
+    align-items: center;
+    display: flex;
+    font-weight: normal;
+    gap: 4px;
+}
+
+/* Per-currency prices grid */
+.esp-currency-prices {
+    border-top: 1px solid #f0f0f0;
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: 12px;
+    padding-top: 12px;
+}
+
+.esp-currency-prices h4 {
+    color: #646970;
+    font-size: 11px;
+    font-weight: 600;
+    grid-column: 1 / -1;
+    letter-spacing: 0.05em;
+    margin: 0 0 4px;
+    text-transform: uppercase;
+}

@@ -1,0 +1,13 @@
+includes:
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
+
+parameters:
+    level: 6
+    paths:
+        - eternal-subscription.php
+        - inc/
+    phpVersion: 80300
+    checkMissingIterableValueType: false
+    bootstrapFiles: []
+    scanFiles:
+        - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php

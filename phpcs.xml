@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<ruleset name="Eternal Subscription">
+	<description>PHPCS coding standards for the eternal-subscription plugin.</description>
+
+	<file>eternal-subscription.php</file>
+	<file>inc/</file>
+
+	<arg name="extensions" value="php"/>
+	<arg name="colors"/>
+	<arg value="sp"/>
+
+	<config name="minimum_supported_wp_version" value="6.4"/>
+	<config name="testVersion" value="8.3-"/>
+
+	<rule ref="WordPress">
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
+		<!-- Excluded: conflicts with Generic.Arrays.DisallowLongArraySyntax during auto-fix -->
+		<exclude name="WordPress.Arrays.MultipleStatementAlignment"/>
+	</rule>
+
+	<rule ref="WordPress-Docs"/>
+	<rule ref="WordPress-Extra"/>
+
+</ruleset>
