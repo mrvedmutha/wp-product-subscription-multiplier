@@ -24,11 +24,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 class ESP_Cart {
 
 	/**
+	 * Per-request cache of subscription-tier prices keyed by product ID.
+	 *
+	 * Populated during woocommerce_before_calculate_totals so that the
+	 * companion filter override_subscription_price (priority 20) can
+	 * enforce the correct tier price after CMC's woocommerce_product_get_price
+	 * filter (priority 10) has already run and overwritten it with the
+	 * product's standard per-currency price.
+	 *
+	 * @var array<int, float>
+	 */
+	private static array $subscription_prices = array();
+
+	/**
 	 * Constructor — registers all WooCommerce cart and order hooks.
 	 */
 	public function __construct() {
 		add_filter( 'woocommerce_add_cart_item_data', array( $this, 'add_cart_item_data' ), 10, 2 );
 		add_action( 'woocommerce_before_calculate_totals', array( $this, 'set_cart_item_price' ) );
+		add_filter( 'woocommerce_product_get_price', array( $this, 'override_subscription_price' ), 20, 2 );
 		add_filter( 'woocommerce_get_item_data', array( $this, 'display_cart_item_data' ), 10, 2 );
 		add_action( 'woocommerce_checkout_create_order_line_item', array( $this, 'save_order_item_meta' ), 10, 3 );
 	}
@@ -66,17 +80,62 @@ class ESP_Cart {
 	}
 
 	/**
-	 * Overrides the cart item price for supply plan items before totals are calculated.
+	 * Populates the subscription price cache and sets initial prices before
+	 * WooCommerce calculates cart totals.
+	 *
+	 * The price is resolved fresh from the current active currency on every
+	 * calculation so that switching currencies after add-to-cart always applies
+	 * the correct per-currency tier price. The cache populated here is then used
+	 * by override_subscription_price to win against CMC's price filter.
 	 *
 	 * @param WC_Cart $cart The WooCommerce cart instance.
 	 * @return void
 	 */
 	public function set_cart_item_price( WC_Cart $cart ): void {
+		self::$subscription_prices = array();
+
+		$current_currency = class_exists( 'CMC_Currency_Manager' )
+			? CMC_Currency_Manager::get_active_currency()
+			: get_option( 'woocommerce_currency' );
+
 		foreach ( $cart->get_cart() as $item ) {
-			if ( isset( $item['_esp_final_price'] ) ) {
-				$item['data']->set_price( (float) $item['_esp_final_price'] );
+			if ( ! isset( $item['_esp_months'], $item['data'] ) ) {
+				continue;
 			}
+
+			$product_id = (int) $item['data']->get_id();
+			$price      = ESP_Frontend::get_tier_price(
+				$product_id,
+				(int) $item['_esp_months'],
+				(string) $current_currency
+			);
+
+			self::$subscription_prices[ $product_id ] = $price;
+			$item['data']->set_price( $price );
 		}
+	}
+
+	/**
+	 * Enforces the subscription tier price after CMC's product price filter runs.
+	 *
+	 * CMC hooks into woocommerce_product_get_price at priority 10 and returns
+	 * the product's standard per-currency price (e.g. $41.99 for the one-time
+	 * USD price), overwriting the tier price set by set_cart_item_price. This
+	 * filter runs at priority 20 to restore the correct subscription tier price
+	 * for any product that has one cached for the current request.
+	 *
+	 * @param mixed      $price   The price value as modified by earlier filters.
+	 * @param WC_Product $product The product instance.
+	 * @return mixed The subscription tier price if applicable, otherwise unchanged.
+	 */
+	public function override_subscription_price( $price, WC_Product $product ) {
+		$product_id = $product->get_id();
+
+		if ( isset( self::$subscription_prices[ $product_id ] ) ) {
+			return (string) self::$subscription_prices[ $product_id ];
+		}
+
+		return $price;
 	}
 
 	/**
