@@ -71,17 +71,44 @@
 
 /* Discount type radio group */
 .esp-discount-type-group {
-    align-items: center;
-    display: flex;
-    gap: 16px;
-    margin-bottom: 8px;
+    display: block;
+    padding-left: 160px;
 }
 
-.esp-discount-type-group label {
+/* Each radio option on its own line — .esp-radio-label has no WC rules against it */
+.esp-radio-label {
     align-items: center;
-    display: flex;
+    color: #3c434a;
+    cursor: pointer;
+    display: flex !important;
+    float: none !important;
+    font-size: 13px;
     font-weight: normal;
-    gap: 4px;
+    gap: 6px;
+    line-height: 1.4;
+    margin-bottom: 6px;
+    width: auto !important;
+}
+
+.esp-radio-label input[type="radio"] {
+    float: none !important;
+    margin: 0;
+    width: auto !important;
+}
+
+/* Hide number spinner arrows on discount value and currency override inputs */
+.esp-currency-prices input[type="number"]::-webkit-inner-spin-button,
+.esp-currency-prices input[type="number"]::-webkit-outer-spin-button,
+input[id$="_discount_value"]::-webkit-inner-spin-button,
+input[id$="_discount_value"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.esp-currency-prices input[type="number"],
+input[id$="_discount_value"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
 }
 
 /* Per-currency prices grid */

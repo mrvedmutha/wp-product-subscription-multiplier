@@ -81,8 +81,21 @@ document.addEventListener('DOMContentLoaded', function () {
         if (discountValueInput) {
             discountValueInput.addEventListener('input', function () { computeFinalPrice(n); });
         }
+        function updateDiscountPlaceholder() {
+            if (!discountValueInput) { return; }
+            var checked = document.querySelector('input[name="_esp_' + n + 'm_discount_type"]:checked');
+            discountValueInput.placeholder = checked && checked.value === 'fixed_total'
+                ? 'Enter fixed amount'
+                : 'Enter percentage';
+        }
+
+        updateDiscountPlaceholder();
+
         discountTypeInputs.forEach(function (radio) {
-            radio.addEventListener('change', function () { computeFinalPrice(n); });
+            radio.addEventListener('change', function () {
+                computeFinalPrice(n);
+                updateDiscountPlaceholder();
+            });
         });
     });
 

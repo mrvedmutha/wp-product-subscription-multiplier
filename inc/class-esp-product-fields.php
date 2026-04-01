@@ -138,11 +138,11 @@ class ESP_Product_Fields {
 			echo '<p class="form-field">';
 			echo '<label>' . esc_html__( 'Discount Type', 'eternal-subscription' ) . '</label>';
 			echo '<span class="esp-discount-type-group">';
-			echo '<label>';
+			echo '<label class="esp-radio-label">';
 			echo '<input type="radio" name="' . esc_attr( "{$prefix}_discount_type" ) . '" value="percentage"' . checked( $disc_type, 'percentage', false ) . '>';
 			echo ' ' . esc_html__( 'Percentage', 'eternal-subscription' );
 			echo '</label>';
-			echo '<label>';
+			echo '<label class="esp-radio-label">';
 			echo '<input type="radio" name="' . esc_attr( "{$prefix}_discount_type" ) . '" value="fixed_total"' . checked( $disc_type, 'fixed_total', false ) . '>';
 			echo ' ' . esc_html__( 'Fixed Total', 'eternal-subscription' );
 			echo '</label>';
@@ -189,7 +189,9 @@ class ESP_Product_Fields {
 								'label'       => sprintf( esc_html__( 'Final Price (%s)', 'eternal-subscription' ), esc_html( strtoupper( $currency ) ) ),
 								'type'        => 'number',
 								'value'       => esc_attr( (string) $stored_value ),
-								'placeholder' => esc_attr__( 'Auto-calculated if empty', 'eternal-subscription' ),
+								'placeholder' => '',
+								'desc_tip'    => true,
+								'description' => esc_html__( 'Auto-calculated if empty', 'eternal-subscription' ),
 								'custom_attributes' => array(
 									'step' => 'any',
 									'min'  => '0',
